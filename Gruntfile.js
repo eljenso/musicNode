@@ -15,7 +15,7 @@ module.exports = function (grunt) {
     watch: {
       project: {
         tasks: [],
-        files: ['**/*.*'],
+        files: ['public/**/*.*', 'views/**/*.*'],
         options: {
           livereload: true,
         }
@@ -23,7 +23,10 @@ module.exports = function (grunt) {
     },
     nodemon: {
       server: {
-        script: 'server.js'
+        script: 'server.js',
+        options: {
+          ext: 'js,less'
+        }
       }
     },
     concurrent: {
@@ -33,7 +36,29 @@ module.exports = function (grunt) {
           logConcurrentOutput: true
         }
       },
+    },
+    bower: {
+      install: {
+        options: {
+          targetDir: 'public/resources',
+          install: true,
+          verbose: true,
+          layout: 'byComponent',
+          cleanTargetDir: true,
+          cleanBowerDir: false,
+          bowerOptions: {}
+        }
+      }
+    },
+    bower_concat: {
+      all: {
+        dest: 'build/_bower.js',
+        bowerOptions: {
+          relative: false
+        }
+      }
     }
+
   });
 
 

@@ -1,9 +1,9 @@
 extend layout
+
+block head
+  script(src='js/index.js')
+
 block maincontent
-  p asdasd
-
-block leftbar
-  p leftbar
-
-block rightbar
-  p rightbar
+  input#search.form-control
+  button(type="button").btn.btn-default
+    | Test

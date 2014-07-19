@@ -12,6 +12,13 @@ module.exports = function (grunt) {
 
 
   grunt.initConfig({
+    'node-inspector': {
+      dev: {
+        options: {
+          'hidden': ['node_modules']
+        }
+      }
+    },
     watch: {
       project: {
         tasks: [],
@@ -25,13 +32,14 @@ module.exports = function (grunt) {
       server: {
         script: 'server.js',
         options: {
-          ext: 'js,less'
+          ext: 'js,less',
+          // nodeArgs: ['--debug-brk']
         }
       }
     },
     concurrent: {
       default: {
-        tasks: ['nodemon:server', 'watch:project'],
+        tasks: ['nodemon:server', 'watch:project', 'node-inspector'],
         options: {
           logConcurrentOutput: true
         }

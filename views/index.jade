@@ -1,9 +1,9 @@
 extend layout
 
-block head
+block dependencies
+  script(src='socket.io/socket.io.js')
   script(src='js/index.js')
 
 block maincontent
-  input#search.form-control
-  button(type="button").btn.btn-default
-    | Test
+  input#input_search.form-control
+  button#btn_search.btn.btn-default(type="button") Search

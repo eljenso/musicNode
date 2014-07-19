@@ -1,0 +1,25 @@
+{
+  "name": "musicNode",
+  "version": "0.0.1",
+  "description": "musicNode =========",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eljenso/musicNode.git"
+  },
+  "keywords": [
+    "music",
+    "mopidy",
+    "spotify",
+    "party"
+  ],
+  "author": "Jens Böttcher <eljenso.boettcher@gmail.com>",
+  "license": "GPL v2",
+  "bugs": {
+    "url": "https://github.com/eljenso/musicNode/issues"
+  },
+  "homepage": "https://github.com/eljenso/musicNode"
+}

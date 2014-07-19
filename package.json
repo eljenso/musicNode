@@ -21,5 +21,22 @@
   "bugs": {
     "url": "https://github.com/eljenso/musicNode/issues"
   },
-  "homepage": "https://github.com/eljenso/musicNode"
+  "homepage": "https://github.com/eljenso/musicNode",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-concurrent": "^0.5.0",
+    "grunt-contrib-less": "^0.11.3",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-nodemon": "^0.3.0",
+    "load-grunt-tasks": "^0.6.0"
+  },
+  "dependencies": {
+    "express": "^4.6.1",
+    "jade": "^1.4.2",
+    "less": "^1.7.3",
+    "less-middleware": "^1.0.3",
+    "mopidy": "^0.4.0",
+    "q": "^1.0.1",
+    "socket.io": "^1.0.6"
+  }
 }

@@ -1,0 +1,20 @@
+doctype html
+html
+  head
+    title #{website} - #{title}
+    link(rel='stylesheet', href='css/style.css')
+    //- script(src='../socket.io/socket.io.js')
+    //- script(src='../user.js')
+
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+    script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js')
+    link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+  body
+    .container
+      .row-fluid
+        .col-md-2.leftbar
+          block leftbar
+        .col-md-8.maincontent
+          block maincontent
+        .col-md-2.rightbar
+          block rightbar

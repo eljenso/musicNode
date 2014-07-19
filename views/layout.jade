@@ -1,0 +1,39 @@
+doctype html
+html
+  head
+    meta(http-equiv='content-type', content='#{contentType}; charset=UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title #{website} - #{title}
+
+    //- jQuery
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+
+    //- bootstrap
+    script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js')
+    link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+
+    //- selectize
+    script(src='resources/selectize/js/selectize.min.js')
+    link(rel='stylesheet', href='resources/selectize/css/selectize.bootstrap3.css')
+
+    link(rel='stylesheet', href='css/style.css')
+    //- script(src='../socket.io/socket.io.js')
+    //- script(src='../user.js')
+
+    block head
+
+  body
+    .container
+      .header
+        h3.text-muted #{website}
+
+      .row
+        .col-md-2.leftbar
+          block leftbar
+        .col-md-8.maincontent
+          block maincontent
+        .col-md-2.rightbar
+          block rightbar
+
+      .footer
+        p.text-muted Some text.

@@ -1,0 +1,25 @@
+{
+  "name": "musicNode",
+  "version": "0.0.1",
+  "homepage": "https://github.com/eljenso/musicNode",
+  "authors": [
+    "Jens Böttcher <jens.boettcher@rwth-aachen.de>"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "license": "GPL v2",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "selectize": "~0.10.1",
+    "bootstrap": "~3.2.0",
+    "jquery": "~2.1.1"
+  }
+}

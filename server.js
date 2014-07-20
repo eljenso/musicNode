@@ -1,4 +1,6 @@
-/**
+/**!
+ * musicNode
+ *
  * Copyright(c) 2014 Jens Böttcher <eljenso.boettcher@gmail.com
  */
 
@@ -15,7 +17,11 @@ var express = require('express'),
     Q = require('q');
 
 
-var port = process.env.PORT || 2000;
+/**
+ * Importing settings
+ */
+var config = require('./lib/config');
+
 
 
 
@@ -23,15 +29,14 @@ var port = process.env.PORT || 2000;
  * Setting up express
  */
 
-
 // telling express to use jade as view engine
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 
-
 // telling express to use less
 app.use(lessMiddleware(__dirname + '/public'));
 app.use(express.static(__dirname + '/public'));
+
 
 
 /**
@@ -50,10 +55,12 @@ app.get('/', function (req, res) {
 });
 
 
+
 /**
  * socket.io
  */
 
+// Send the current queue to the given client (or broadcast to all if no client is given)
 var broadcastCurrentPlaylist = function (client) {
   if (mopidy.tracklist && mopidy.playback) {
     var indexCurrentTrack = 0;
@@ -86,11 +93,14 @@ var broadcastCurrentPlaylist = function (client) {
   }
 }
 
+
 io.sockets.on('connection', function (client) {
   client.justVoted = false;
 
+  // Send new client the current queue
   broadcastCurrentPlaylist(client);
 
+  // Client requested a search
   client.on('search', function (query) {
     console.log('Searching for: '+query);
 
@@ -104,6 +114,7 @@ io.sockets.on('connection', function (client) {
 
   });
 
+  // Client added a song to the queue
   client.on('addSong',function (songURI) {
     console.log('Adding songURI '+songURI);
 
@@ -119,18 +130,18 @@ io.sockets.on('connection', function (client) {
       }).done();
   });
 
+  // Client made an upvote for a song
   client.on('upVote', function (trackPosition) {
     if (!client.justVoted) {
       client.justVoted = true;
-
       mopidy.tracklist.move(parseInt(trackPosition, 10),parseInt(trackPosition, 10),(parseInt(trackPosition, 10)-1));
-
       setTimeout(function () {
         client.justVoted = false;
       }, 5*1000);
     }
   });
 
+  // Client made an downvote for a song
   client.on('downVote', function (trackPosition) {
     if (!client.justVoted) {
       client.justVoted = true;
@@ -151,17 +162,18 @@ io.sockets.on('connection', function (client) {
  * Mopidy
  */
 
+// init mopidy
 var mopidy = new Mopidy({
-  webSocketUrl: "ws://127.0.0.1:6680/mopidy/ws/",
+  webSocketUrl: config.mopidy.adress,
   autoConnect: false
 });
 
 
+// Songs added by clients so far
 var songsAdded = 0;
 
 
-// Functions
-
+// Convert a list of tracks into a client-readable format (and shorten be length, if given)
 var prepareTracks = function (tracks, length) {
   var deferred = Q.defer();
 
@@ -199,6 +211,7 @@ var prepareTracks = function (tracks, length) {
 };
 
 
+// Search the library using the query
 var mopidySearch = function (query) {
   var deferred = Q.defer();
 
@@ -216,12 +229,8 @@ var mopidySearch = function (query) {
   return deferred.promise;
 };
 
-var trackDesc = function (track) {
-  return track.name + " by " + track.artists[0].name +
-    " from " + track.album.name;
-};
 
-
+// Start a playlist
 var queueAndPlayPlaylist = function (playlistName) {
   var deferred = Q.defer();
 
@@ -260,13 +269,10 @@ var queueAndPlayPlaylist = function (playlistName) {
 
 
 
-
-//  Settings
-
-
+// Mopidy event handlers
 
 mopidy.on('state:online', function () {
-  queueAndPlayPlaylist('starred')
+  queueAndPlayPlaylist(config.mopidy.defaultPlaylist)
     .then(function () {
       broadcastCurrentPlaylist();
     })
@@ -286,9 +292,11 @@ mopidy.on('event:trackPlaybackStarted', function () {
 
 
 
+/**
+ * Connection to mopidy and starting up express
+ */
 
 mopidy.connect();
-
-http.listen(port, function () {
-  console.log('Server listening on port '+port);
+http.listen(config.main.port, function () {
+  console.log('Server listening on port '+config.main.port);
 });

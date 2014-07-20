@@ -1,4 +1,8 @@
 
+# Compilted CSS files
+public/css/*.css
+
+
 # Bower
 bower_components
 public/resources

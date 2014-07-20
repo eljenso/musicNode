@@ -1,9 +1,3 @@
-/* 
-* @Author: Jens Böttcher
-* @Date:   2014-07-19 15:41:38
-* @Last Modified by:   Jens Böttcher
-* @Last Modified time: 2014-07-19 16:27:59
-*/
 
 module.exports = function (grunt) {
   "use strict";

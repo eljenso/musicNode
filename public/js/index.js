@@ -1,3 +1,8 @@
+/**
+ * Copyright(c) 2014 Jens Böttcher <eljenso.boettcher@gmail.com
+ */
+
+
 $(function () {
   'use strict';
 

@@ -1,8 +1,5 @@
-/** 
- * @Author: Jens Böttcher
- * @Date:   2014-07-19 12:20:04
- * @Last Modified by:   Jens Böttcher
- * @Last Modified time: 2014-07-20 12:09:23
+/**
+ * Copyright(c) 2014 Jens Böttcher <eljenso.boettcher@gmail.com
  */
 
 

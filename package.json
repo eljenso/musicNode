@@ -1,6 +1,6 @@
 {
   "name": "musicNode",
-  "version": "0.5",
+  "version": "0.5.0",
   "description": "A simple queue manager for mopidy, suitable for parties.",
   "main": "server.js",
   "repository": {

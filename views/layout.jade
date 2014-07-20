@@ -15,26 +15,18 @@ html
     link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
 
     link(rel='stylesheet', href='css/style.css')
-    //- script(src='../socket.io/socket.io.js')
-    //- script(src='../user.js')
-
-    
 
   body
-
     .container
       .header
         h3.page-header #{website}
           small Voting only allowed every 5 seconds per user.
-
       .row
         #leftbar.col-md-6.leftbar
           block leftbar
         .col-md-6.rightbar
           block rightbar
-
       hr
       .footer
-        p.text-muted Some text.
-
+        p.text-muted Proudly made with express, jade, less and bootstrap.
     block dependencies

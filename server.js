@@ -70,6 +70,7 @@ var broadcastCurrentPlaylist = function (client) {
       })
       .then(function (index) {
         indexCurrentTrack = index;
+        currentTrackIndex = index;
         return mopidy.tracklist.getTlTracks();
       })
       .then(function (tlTracks) {
@@ -118,7 +119,7 @@ io.sockets.on('connection', function (client) {
 
     mopidy.library.lookup(songURI)
       .then(function (track) {
-        return mopidy.tracklist.add(track, 1+songsAdded);
+        return mopidy.tracklist.add(track, 1+songsAdded+currentTrackIndex);
       })
       .then(function (track) {
         songsAdded++;
@@ -170,6 +171,7 @@ var mopidy = new Mopidy({
 
 // Songs added by clients so far
 var songsAdded = 0;
+var currentTrackIndex = 0;
 
 
 // Convert a list of tracks into a client-readable format (and shorten be length, if given)
@@ -291,6 +293,11 @@ mopidy.on('event:tracklistChanged', function () {
 
 mopidy.on('event:trackPlaybackStarted', function () {
   broadcastCurrentPlaylist();
+  if (songsAdded < 1) {
+    songsAdded = 0;
+  } else {
+    songsAdded--;
+  }
 });
 
 

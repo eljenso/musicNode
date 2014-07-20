@@ -62,7 +62,15 @@ $(function () {
   var fill_playlistTable = function (tracks, currentPosition) {
     var tbl_playlist = $('#table_playlist');
     tbl_playlist.empty();
-    for (var i = currentPosition; i < tracks.length; i++) {
+
+    var playlistLength = 15;
+    if (playlistLength > tracks.length-1) {
+      playlistLength = tracks.length-1
+    } else {
+      playlistLength = currentPosition+playlistLength;
+    }
+
+    for (var i = currentPosition; i <= playlistLength; i++) {
       var row = document.createElement('tr');
       row = $(row);
       var playingCell= document.createElement('td');

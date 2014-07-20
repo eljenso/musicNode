@@ -165,7 +165,8 @@ io.sockets.on('connection', function (client) {
 // init mopidy
 var mopidy = new Mopidy({
   webSocketUrl: config.mopidy.adress,
-  autoConnect: false
+  autoConnect: false,
+  callingConvention: 'by-position-only'
 });
 
 

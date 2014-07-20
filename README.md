@@ -20,8 +20,8 @@ Currently only support for Spotify can be guaranteed.
 
 ## How to install ###
 
-1. `npm install`
-2. `grunt`
+1. `npm install --production`
+2. `node server.js` or `PORT=1337 node server.js`
 
 
 ## Configuration ##

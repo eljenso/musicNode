@@ -38,27 +38,6 @@ module.exports = function (grunt) {
           logConcurrentOutput: true
         }
       },
-    },
-    bower: {
-      install: {
-        options: {
-          targetDir: 'public/resources',
-          install: true,
-          verbose: true,
-          layout: 'byComponent',
-          cleanTargetDir: true,
-          cleanBowerDir: false,
-          bowerOptions: {}
-        }
-      }
-    },
-    bower_concat: {
-      all: {
-        dest: 'build/_bower.js',
-        bowerOptions: {
-          relative: false
-        }
-      }
     }
 
   });

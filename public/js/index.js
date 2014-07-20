@@ -6,9 +6,15 @@
 $(function () {
   'use strict';
 
+  // Formating a desirable HTML string for a track
+  var trackToHTML = function (track) {
+    return track.name+'   ' + '<small class="text-muted"> by ' +track.artist+'</small>';
+  };
 
+
+  // Display received search results in #table_searchResults
   var create_searchResultList = function (results) {
-    $('#results').empty();
+    $('#table_searchResults').empty();
 
     for (var i = 0; i < results.length; i++) {
       var row = document.createElement('tr');
@@ -18,11 +24,12 @@ $(function () {
       var cellInfo = document.createElement('td');
       cellInfo = $(cellInfo);
 
-      var artist = document.createElement('p');
-      artist = $(artist);
-      artist.html(results[i].name+'   ' + '<small class="text-muted"> by ' +results[i].artist+'</small>' );
+      var songInfo = document.createElement('p');
+      songInfo = $(songInfo);
+      var songMarkup = trackToHTML(results[i]);
+      songInfo.html(songMarkup);
 
-      cellInfo.append([artist]);
+      cellInfo.append([songInfo]);
       
 
       var cellBtn = document.createElement('td');
@@ -44,12 +51,14 @@ $(function () {
 
     $('.btn-addSong').click(function() {
       socket.emit('addSong', $(this).attr('data-uri'));
-      $('#results').empty();
+      $('#input_search').val('');
+      $('#table_searchResults').empty();
       document.location = '/#top';
     });
   };
 
 
+  // Display current queue in #table_playlist
   var fill_playlistTable = function (tracks, currentPosition) {
     var tbl_playlist = $('#table_playlist');
     tbl_playlist.empty();
@@ -67,21 +76,27 @@ $(function () {
       btnCell.attr('data-trackPosition', i);
       
 
+      // Making current track visible
       if (i === currentPosition) {
         row.addClass('active');
         playingCell.html('<span class="glyphicon glyphicon-play"></span>');
+
+      // Next song gets only a downvote button
       } else if (i === currentPosition+1) {
         var btn_voteDown = document.createElement('button');
         btn_voteDown = $(btn_voteDown);
         btn_voteDown.addClass('btn btn-default btn-sm btn_downVote');
         btn_voteDown.html('<span class="glyphicon glyphicon-chevron-down"></span>');
         btnCell.append(btn_voteDown);
+
+      // Last song gets only an upvote button
       } else if (i === tracks.length-1) {
         var btn_voteUp = document.createElement('button');
         btn_voteUp = $(btn_voteUp);
         btn_voteUp.addClass('btn btn-default btn-sm btn_upVote');
         btn_voteUp.html('<span class="glyphicon glyphicon-chevron-up"></span>');
         btnCell.append(btn_voteUp);
+
       } else {
         var btns_voting = document.createElement('div');
         btns_voting = $(btns_voting);
@@ -98,7 +113,7 @@ $(function () {
         btnCell.append(btns_voting);
       }
 
-      songCell.text(tracks[i].artist + ' - ' + tracks[i].name);
+      songCell.html(trackToHTML(tracks[i]));
       row.append([playingCell, songCell,btnCell]);
       tbl_playlist.append(row);
     }
@@ -125,7 +140,6 @@ $(function () {
     fill_playlistTable(message.tracks, message.currentPosition);
   });
 
-
   socket.on('searchResults', function (results) {
     create_searchResultList(results);
   });
@@ -139,13 +153,16 @@ $(function () {
 
   $('#input_search').keyup(function(e) {
     if (e.keyCode == 13) {
-      socket.emit('search', $('#input_search').val());
+      if($('#input_search').val()) {
+        socket.emit('search', $('#input_search').val());
+      }
     }
   });
-
   $('#btn_search').click(function(event) {
-    $(this).blur();
-    socket.emit('search', $('#input_search').val());
+    if($('#input_search').val()) {
+      $(this).blur();
+      socket.emit('search', $('#input_search').val());
+    }
   });
 
 

@@ -6,13 +6,17 @@ block dependencies
 
 block leftbar
   #search
-    input#input_search.form-control(placeholder='Search')
-  #results
+    .input-group
+      input#input_search.form-control(placeholder='Search')
+      span.input-group-btn
+        button#btn_search.btn.btn-default
+          span.glyphicon.glyphicon-search
+  table.table.table-bordered
+    tbody#table_searchResults
 
 block rightbar
   div
-    h3 Current playlist (next 50 songs)
+    center
+      h4 Playlist
     table.table
       tbody#table_playlist
-
-

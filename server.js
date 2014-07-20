@@ -29,11 +29,11 @@ var config = require('./lib/config');
  * Setting up express
  */
 
-// telling express to use jade as view engine
+// Telling express to use jade as view engine
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 
-// telling express to use less
+// Telling express to use less
 app.use(lessMiddleware(__dirname + '/public'));
 app.use(express.static(__dirname + '/public'));
 

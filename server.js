@@ -2,7 +2,7 @@
  * @Author: Jens Böttcher
  * @Date:   2014-07-19 12:20:04
  * @Last Modified by:   Jens Böttcher
- * @Last Modified time: 2014-07-19 15:25:26
+ * @Last Modified time: 2014-07-20 12:09:23
  */
 
 
@@ -59,22 +59,22 @@ app.get('/', function (req, res) {
 io.sockets.on('connection', function (client) {
   console.log('somone connecting');
 
-  setTimeout(function () {
-    client.emit('playlistUpdate', 'hello');
-  },1000*10);
 
   mopidy.tracklist.getTlTracks()
     .then(function (tlTracks) {
-      client.emit('playlistUpdate',tlTracks)
+      return prepareTracks(tlTracks, 50);
+    })
+    .then(function (preparedTracks) {
+      client.emit('playlistUpdate',preparedTracks);
     })
     .catch(function (error) {
       console.log(error);
     }).done();
 
-  client.on('search', function (query, field) {
-    console.log('Searching for: '+query+' in field '+field);
+  client.on('search', function (query) {
+    console.log('Searching for: '+query);
 
-    mopidySearch(query, field)
+    mopidySearch(query)
       .then(function (results) {
         client.emit('searchResults', results);
       })
@@ -101,13 +101,55 @@ io.sockets.on('connection', function (client) {
 
 // Functions
 
+var prepareTracks = function (tracks, length) {
+  var deferred = Q.defer();
+
+  var preparedTracks = [];
+
+  var returnLength = length;
+  if (returnLength > tracks.length-1) {
+    returnLength = tracks.length-1;
+  };
+
+  for (var i = 0; i <= returnLength; i++) {
+    var currentTrack = tracks[i];
+
+    if (currentTrack.__model__ === "TlTrack") {
+      currentTrack = currentTrack.track;
+    };
+
+    var track = {
+      name: currentTrack.name,
+      artist: currentTrack.artists[0].name,
+      album: currentTrack.album.name,
+      year: currentTrack.date,
+      uri: currentTrack.uri
+    };
+
+    preparedTracks.push(track);
+
+    if (i === returnLength) {
+      deferred.resolve(preparedTracks);
+    };
+  };
+
+  return deferred.promise;
+};
+
+
 var mopidySearch = function (query) {
   var deferred = Q.defer();
 
   mopidy.library.search({'any' : [query]})
     .then(function (results) {
-      deferred.resolve(results[1]);
-    });
+      return prepareTracks(results[1].tracks, 10);
+    })
+    .then(function (preparedResults) {
+      deferred.resolve(preparedResults);
+    })
+    .catch(function (error) {
+      deferred.reject(error);
+    }).done();
 
   return deferred.promise;
 };
@@ -141,12 +183,16 @@ var queueAndPlayPlaylist = function (playlistName) {
               return mopidy.playback.getCurrentTrack();
             })
             .then(function (track) {
-                  console.log("Now playing:", trackDesc(track));
+              console.log("Now playing:", trackDesc(track));
+            })
+            .then(function (preparedTracks) {
+              console.log(preparedTracks);
+              io.emit('playlistUpdate', preparedTracks);
             })
             .catch(function (error) {
               console.log(error);
             }).done();
-          io.emit('playlistUpdate', playlists[i].tracks);
+          
         }
       }
   });
@@ -158,7 +204,7 @@ var queueAndPlayPlaylist = function (playlistName) {
 //  Settings
 
 var mopidy = new Mopidy({
-  webSocketUrl: "ws://localhost:6680/mopidy/ws/",
+  webSocketUrl: "ws://127.0.0.1:6680/mopidy/ws/",
   autoConnect: false
 });
 

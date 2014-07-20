@@ -23,19 +23,19 @@ html
     
 
   body
-    block dependencies
 
     .container
       .header
-        h3.text-muted #{website}
+        h3.page-header #{website}
 
       .row
-        .col-md-2.leftbar
+        .col-md-6.leftbar
           block leftbar
-        .col-md-8.maincontent
-          block maincontent
-        .col-md-2.rightbar
+        .col-md-6.rightbar
           block rightbar
 
+      hr
       .footer
         p.text-muted Some text.
+
+    block dependencies

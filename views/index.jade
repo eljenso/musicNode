@@ -4,6 +4,15 @@ block dependencies
   script(src='socket.io/socket.io.js')
   script(src='js/index.js')
 
-block maincontent
-  input#input_search.form-control
-  button#btn_search.btn.btn-default(type="button") Search
+block leftbar
+  #search
+    input#input_search.form-control(placeholder='Search')
+  #results
+
+block rightbar
+  div
+    h3 Current playlist (next 50 songs)
+    table.table
+      tbody#table_playlist
+
+

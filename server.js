@@ -102,8 +102,6 @@ io.sockets.on('connection', function (client) {
 
   // Client requested a search
   client.on('search', function (query) {
-    console.log('Searching for: '+query);
-
     mopidySearch(query)
       .then(function (results) {
         client.emit('searchResults', results);
@@ -218,7 +216,12 @@ var mopidySearch = function (query) {
 
   mopidy.library.search({'any' : [query]})
     .then(function (results) {
-      return prepareTracks(results[1].tracks, 5);
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].uri.indexOf('spotify') > -1) {
+          return prepareTracks(results[i].tracks, 5);
+        }
+      };
+      
     })
     .then(function (preparedResults) {
       deferred.resolve(preparedResults);

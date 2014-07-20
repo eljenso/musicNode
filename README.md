@@ -25,7 +25,7 @@ Currently only support for Spotify can be guaranteed.
 
 
 ## Configuration ##
-Configuration is done in [settings.js](lib/settings.js).
+Configuration is done in [config.js](lib/config.js).
 
 
 ### Built with ###

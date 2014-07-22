@@ -11,9 +11,9 @@ A simple queue manager for mopidy, suitable for parties.
 
 ## Requirements ###
 
-* [Mopidy](http://www.mopidy.com/) with HTTP API enabled
+* [Mopidy](http://www.mopidy.com/) with HTTP API and Spotify enabled
+  * Make sure you configured everything correctly (e.g. with [ncmpcpp](http://ncmpcpp.rybczak.net/))
 * [node.js](http://nodejs.org/)
-* [Grunt](http://gruntjs.com/)
 
 Currently only support for Spotify can be guaranteed.
 
@@ -27,6 +27,7 @@ Currently only support for Spotify can be guaranteed.
 ## Configuration ##
 Configuration is done in [config.js](lib/config.js).
 
+=========
 
 ### Built with ###
 * node

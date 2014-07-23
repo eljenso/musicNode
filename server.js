@@ -133,7 +133,6 @@ io.sockets.on('connection', function (client) {
       })
       .then(function (track) {
         amountSongsAdded++;
-        console.log(songsAdded);
       })
       .catch(function (error) {
         console.log(error);
@@ -315,5 +314,5 @@ mopidy.on('event:trackPlaybackStarted', function () {
 
 mopidy.connect();
 http.listen(config.main.port, function () {
-  console.log('Server listening on port '+config.main.port);
+  console.log('Visit page at http://localhost:'+config.main.port);
 });

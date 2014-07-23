@@ -34,14 +34,13 @@ $(function () {
 
       var cellBtn = document.createElement('td');
       cellBtn = $(cellBtn);
-      cellBtn.addClass('cell_searchBtn');
+      cellBtn.addClass('btnCell');
       var btn_addSong = document.createElement('button');
       btn_addSong = $(btn_addSong);
       btn_addSong.addClass('btn btn-default btn-addSong');
       btn_addSong.html('<span class="glyphicon glyphicon-plus"></span>');
       btn_addSong.attr('data-uri', results[i].uri);
       cellBtn.append(btn_addSong);
-
 
       row.append(cellInfo);
       row.append(cellBtn);
@@ -89,12 +88,12 @@ $(function () {
         row.addClass('active');
         playingCell.html('<span class="glyphicon glyphicon-play"></span>');
 
-      } else if (i > tracks.length-1) {
-        var btn_voteUp = document.createElement('button');
-        btn_voteUp = $(btn_voteUp);
-        btn_voteUp.addClass('btn btn-default btn-sm btn_upVote');
-        btn_voteUp.html('<span class="glyphicon glyphicon-chevron-up"></span>');
-        btnCell.append(btn_voteUp);
+      } else if (i < tracks.length-1) {
+        var btn_voteDown = document.createElement('button');
+        btn_voteDown = $(btn_voteDown);
+        btn_voteDown.addClass('btn btn-default btn-sm btn_downVote');
+        btn_voteDown.html('<span class="glyphicon glyphicon-chevron-down"></span>');
+        btnCell.append(btn_voteDown);
       }
 
       songCell.html(trackToHTML(tracks[i]));
@@ -102,9 +101,9 @@ $(function () {
       tbl_playlist.append(row);
     }
 
-    $('.btn_upVote').click(function() {
+    $('.btn_downVote').click(function() {
       $(this).blur();
-      socket.emit('upVote', $(this).closest('td').attr('data-trackPosition'))
+      socket.emit('downVote', $(this).closest('td').attr('data-trackPosition'))
     });
   };
 

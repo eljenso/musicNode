@@ -13,6 +13,7 @@ module.exports = function (grunt) {
         }
       }
     },
+
     watch: {
       project: {
         tasks: [],
@@ -22,11 +23,14 @@ module.exports = function (grunt) {
         }
       }
     },
+
     nodemon: {
       server: {
         script: 'server.js',
         options: {
+          nodeArgs: '--debug',
           ext: 'js,less',
+          ignore: ['public/**','node_modules/**']
           // nodeArgs: ['--debug-brk']
         }
       }

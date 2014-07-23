@@ -7,7 +7,8 @@ block dependencies
   script(src='js/index.js')
 
 block leftbar
-  #search
+  #search 
+    p.text-muted Add a song
     .input-group
       input#input_search.form-control(placeholder='Search')
       span.input-group-btn
@@ -15,10 +16,13 @@ block leftbar
           span.glyphicon.glyphicon-search
   table.table.table-bordered
     tbody#table_searchResults
+  hr.visible-xs-block.visible-sm-block
 
 block rightbar
   div
     center
       h4 Playlist (next 15 songs)
+        br
+        small You can only downvote every 5 seconds.
     table.table
       tbody#table_playlist

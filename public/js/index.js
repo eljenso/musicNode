@@ -62,14 +62,19 @@ $(function () {
     var tbl_playlist = $('#table_playlist');
     tbl_playlist.empty();
 
-    var playlistLength = 15;
+    var amountPreviousSongs = 3;
+    if (currentPosition < 3) {
+      amountPreviousSongs = currentPosition;
+    };
+
+    var playlistLength = 15 + amountPreviousSongs;
     if (playlistLength > tracks.length-1) {
       playlistLength = tracks.length-1
     } else {
       playlistLength = currentPosition+playlistLength;
     }
 
-    for (var i = currentPosition; i <= playlistLength; i++) {
+    for (var i = currentPosition - amountPreviousSongs; i <= playlistLength; i++) {
       var row = document.createElement('tr');
       row = $(row);
       var playingCell= document.createElement('td');
@@ -84,8 +89,11 @@ $(function () {
       
 
       // Making current track visible
-      if (i === currentPosition) {
+      if (i < currentPosition) {
+        row.addClass('previous');
+      } else if (i === currentPosition) {
         row.addClass('active');
+        row.addClass('current');
         playingCell.html('<span class="glyphicon glyphicon-play"></span>');
 
       } else if (i < tracks.length-1) {
@@ -98,8 +106,21 @@ $(function () {
 
       songCell.html(trackToHTML(tracks[i]));
       row.append([playingCell, songCell,btnCell]);
+
+      // Add user color
+      if (tracks[i].color && !row.hasClass('previous')) {
+        row.removeClass('active');
+        row.css('background-color', tracks[i].color);
+      }
+
       tbl_playlist.append(row);
     }
+
+    var lastCell = $(document.createElement('td')).text('more songs to come').css('text-align', 'center').addClass('text-muted');
+    var lastRow = $(document.createElement('tr')).append([$(document.createElement('td')),lastCell,$(document.createElement('td'))]);
+
+    tbl_playlist.append(lastRow);
+
 
     $('.btn_downVote').click(function() {
       $(this).blur();

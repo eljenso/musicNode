@@ -60,23 +60,21 @@ app.get('/', function (req, res) {
  * socket.io
  */
 
+
 // List of colors
-var colorList = [ '#E0FFFF', '#FFFF00', '#F3E5AB', '#E799A3', '#D1D0CE',
-                  '#5CB3FF', '#A0CFEC', '#7DFDFE', '#59E817', '#6AFB92',
-                  '#EDDA74', '#FFFFC2', '#F7E7CE', '#FFDB58', '#FFCBA4',
-                  '#FF7F50', '#FDD7E4', '#C8A2C8', '#E3E4FA', '#DBB863'];
+var colorList = [ '#80CCE6', '#99EBFF', '#99FFEB', '#99FF99', '#99D6AD',
+                  '#C2C2B2', '#F0E0B2', '#EBC299', '#FFCCB2', '#FFFFB2',
+                  '#FFC2C2', '#FFFFC2', '#F7E7CE', '#E6B2CC', '#9999FF'];
 
 // Send the current queue to the given client (or broadcast to all if no client is given)
 var broadcastCurrentPlaylist = function (client) {
   if (mopidy.tracklist && mopidy.playback) {
-    var indexCurrentTrack = 0;
     mopidy.playback.getCurrentTlTrack()
       .then(function (currentTrack) {
         return mopidy.tracklist.index(currentTrack);
       })
       .then(function (index) {
         indexCurrentTrack = index;
-        currentTrackIndex = index;
         return mopidy.tracklist.getTlTracks();
       })
       .then(function (tlTracks) {
@@ -102,10 +100,14 @@ var broadcastCurrentPlaylist = function (client) {
 
 
 io.sockets.on('connection', function (client) {
+
   client.justVoted = false;
+  client.color = colorList.shift();
+
 
   // Send new client the current queue
   broadcastCurrentPlaylist(client);
+
 
   // Client requested a search
   client.on('search', function (query) {
@@ -119,31 +121,41 @@ io.sockets.on('connection', function (client) {
 
   });
 
+
   // Client added a song to the queue
   client.on('addSong',function (songURI) {
     console.log('Adding songURI '+songURI);
 
     mopidy.library.lookup(songURI)
       .then(function (track) {
-        return mopidy.tracklist.add(track, 1+songsAdded+currentTrackIndex);
+        songsAdded[songURI.split(':')[2]] = { color: client.color};
+        return mopidy.tracklist.add(track, 1+amountSongsAdded+indexCurrentTrack);
       })
       .then(function (track) {
-        songsAdded++;
+        amountSongsAdded++;
+        console.log(songsAdded);
       })
       .catch(function (error) {
         console.log(error);
       }).done();
   });
 
-  // Client made an upvote for a song
-  client.on('upVote', function (trackPosition) {
+
+  // Client made an downvote for a song
+  client.on('downVote', function (trackPosition) {
     if (!client.justVoted) {
       client.justVoted = true;
-      mopidy.tracklist.move(parseInt(trackPosition, 10),parseInt(trackPosition, 10),(parseInt(trackPosition, 10)-1));
+      mopidy.tracklist.move(parseInt(trackPosition, 10),parseInt(trackPosition, 10),(parseInt(trackPosition, 10)+1));
       setTimeout(function () {
         client.justVoted = false;
       }, 5*1000);
-    }
+    };
+  });
+
+
+  // Add the clients color back to the list of unused colors on disconnect
+  client.on('disconnect', function() {
+    colorList.push(client.color);
   });
 
 });
@@ -163,8 +175,9 @@ var mopidy = new Mopidy({
 
 
 // Songs added by clients so far
-var songsAdded = 0;
-var currentTrackIndex = 0;
+var songsAdded = {};
+var amountSongsAdded = 0;
+var indexCurrentTrack = 0;
 
 
 // Convert a list of tracks into a client-readable format (and shorten be length, if given)
@@ -189,9 +202,9 @@ var prepareTracks = function (tracks, length) {
       name: currentTrack.name,
       artist: currentTrack.artists[0].name,
       album: currentTrack.album.name,
-      albumURI: currentTrack.album.uri,
       year: currentTrack.date,
-      uri: currentTrack.uri
+      uri: currentTrack.uri,
+      color: (songsAdded[currentTrack.uri.split(':')[2]] ? songsAdded[currentTrack.uri.split(':')[2]].color : '')
     };
 
     preparedTracks.push(track);
@@ -286,10 +299,10 @@ mopidy.on('event:tracklistChanged', function () {
 
 mopidy.on('event:trackPlaybackStarted', function () {
   broadcastCurrentPlaylist();
-  if (songsAdded < 1) {
-    songsAdded = 0;
+  if (amountSongsAdded < 1) {
+    amountSongsAdded = 0;
   } else {
-    songsAdded--;
+    amountSongsAdded--;
   }
 });
 

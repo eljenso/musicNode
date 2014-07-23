@@ -89,36 +89,12 @@ $(function () {
         row.addClass('active');
         playingCell.html('<span class="glyphicon glyphicon-play"></span>');
 
-      // Next song gets only a downvote button
-      } else if (i === currentPosition+1) {
-        var btn_voteDown = document.createElement('button');
-        btn_voteDown = $(btn_voteDown);
-        btn_voteDown.addClass('btn btn-default btn-sm btn_downVote');
-        btn_voteDown.html('<span class="glyphicon glyphicon-chevron-down"></span>');
-        btnCell.append(btn_voteDown);
-
-      // Last song gets only an upvote button
-      } else if (i === tracks.length-1) {
+      } else if (i > tracks.length-1) {
         var btn_voteUp = document.createElement('button');
         btn_voteUp = $(btn_voteUp);
         btn_voteUp.addClass('btn btn-default btn-sm btn_upVote');
         btn_voteUp.html('<span class="glyphicon glyphicon-chevron-up"></span>');
         btnCell.append(btn_voteUp);
-
-      } else {
-        var btns_voting = document.createElement('div');
-        btns_voting = $(btns_voting);
-        btns_voting.addClass('btn-group');
-        var btn_voteUp = document.createElement('button');
-        btn_voteUp = $(btn_voteUp);
-        btn_voteUp.addClass('btn btn-default btn-sm btn_upVote');
-        btn_voteUp.html('<span class="glyphicon glyphicon-chevron-up"></span>');
-        var btn_voteDown = document.createElement('button');
-        btn_voteDown = $(btn_voteDown);
-        btn_voteDown.addClass('btn btn-default btn-sm btn_downVote');
-        btn_voteDown.html('<span class="glyphicon glyphicon-chevron-down"></span>');
-        btns_voting.append([btn_voteUp, btn_voteDown]);
-        btnCell.append(btns_voting);
       }
 
       songCell.html(trackToHTML(tracks[i]));
@@ -129,10 +105,6 @@ $(function () {
     $('.btn_upVote').click(function() {
       $(this).blur();
       socket.emit('upVote', $(this).closest('td').attr('data-trackPosition'))
-    });
-    $('.btn_downVote').click(function() {
-      $(this).blur();
-      socket.emit('downVote', $(this).closest('td').attr('data-trackPosition'))
     });
   };
 

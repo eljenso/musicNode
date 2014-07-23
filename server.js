@@ -60,6 +60,12 @@ app.get('/', function (req, res) {
  * socket.io
  */
 
+// List of colors
+var colorList = [ '#E0FFFF', '#FFFF00', '#F3E5AB', '#E799A3', '#D1D0CE',
+                  '#5CB3FF', '#A0CFEC', '#7DFDFE', '#59E817', '#6AFB92',
+                  '#EDDA74', '#FFFFC2', '#F7E7CE', '#FFDB58', '#FFCBA4',
+                  '#FF7F50', '#FDD7E4', '#C8A2C8', '#E3E4FA', '#DBB863'];
+
 // Send the current queue to the given client (or broadcast to all if no client is given)
 var broadcastCurrentPlaylist = function (client) {
   if (mopidy.tracklist && mopidy.playback) {
@@ -138,19 +144,6 @@ io.sockets.on('connection', function (client) {
         client.justVoted = false;
       }, 5*1000);
     }
-  });
-
-  // Client made an downvote for a song
-  client.on('downVote', function (trackPosition) {
-    if (!client.justVoted) {
-      client.justVoted = true;
-
-      mopidy.tracklist.move(parseInt(trackPosition, 10),parseInt(trackPosition, 10),(parseInt(trackPosition, 10)+1));
-
-      setTimeout(function () {
-        client.justVoted = false;
-      }, 5*1000);
-    };
   });
 
 });

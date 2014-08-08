@@ -98,6 +98,10 @@ var broadcastCurrentPlaylist = function (client) {
   }
 }
 
+var someoneJust = {
+  'voted': false,
+  'added': false
+};
 
 io.sockets.on('connection', function (client) {
 
@@ -142,12 +146,21 @@ io.sockets.on('connection', function (client) {
 
   // Client made an downvote for a song
   client.on('downVote', function (trackPosition) {
-    if (!client.justVoted) {
+    if (!client.justVoted && !someoneJust.voted) {
       client.justVoted = true;
+      someoneJust.voted= true;
+
       mopidy.tracklist.move(parseInt(trackPosition, 10),parseInt(trackPosition, 10),(parseInt(trackPosition, 10)+1));
+
       setTimeout(function () {
         client.justVoted = false;
       }, 5*1000);
+
+      setTimeout(function () {
+        someoneJust.voted = false;
+      }, 1*1000);
+
+
     };
   });
 
